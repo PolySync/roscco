@@ -147,6 +147,8 @@ if(CATKIN_ENABLE_TESTING)
 
   find_package(rostest REQUIRED)
 
+  add_subdirectory(test/rapidcheck)
+
   add_library(
     oscc_fixture
     test/oscc_fixture.c
@@ -170,12 +172,13 @@ if(CATKIN_ENABLE_TESTING)
     test_ros_oscc_api PUBLIC
     test/include
     test/rapidcheck/include
+    test/rapidcheck/extras/gtest/include
     ${catkin_INCLUDE_DIRS}
   )
 
   target_link_libraries(
     test_ros_oscc_api
-    ${CMAKE_CURRENT_SOURCE_DIR}/test/rapidcheck/librapidcheck.a
+    rapidcheck
     ${PROJECT_NAME}_ros_to_oscc
     oscc_fixture
     ${catkin_LIBRARIES}
@@ -192,13 +195,14 @@ if(CATKIN_ENABLE_TESTING)
     include
     test/include
     test/rapidcheck/include
+    test/rapidcheck/extras/gtest/include
     oscc/api/include/can_protocols
     ${catkin_INCLUDE_DIRS}
   )
 
   target_link_libraries(
     test_oscc_ros_api
-    ${CMAKE_CURRENT_SOURCE_DIR}/test/rapidcheck/librapidcheck.a
+    rapidcheck
     ${PROJECT_NAME}_oscc_to_ros
     oscc_fixture
     ${catkin_LIBRARIES}
