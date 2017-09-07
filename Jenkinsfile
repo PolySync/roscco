@@ -37,9 +37,6 @@ node('xenial') {
       echo 'Release Package Created!'
     }
   }
-  catch(Exception e) {
-    throw e;
-  }
   finally {
     deleteDir()
   }
