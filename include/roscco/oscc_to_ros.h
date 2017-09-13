@@ -1,6 +1,8 @@
 #ifndef OSCC_TO_ROS_H
 #define OSCC_TO_ROS_H
 
+#include <signal.h>
+
 extern "C" {
 #include <oscc.h>
 }
