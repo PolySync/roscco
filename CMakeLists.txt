@@ -11,11 +11,11 @@ else ()
   set (CMAKE_CXX_STANDARD 11)
 endif ()
 
-if(KIA_SOUL)
-    add_definitions(-DKIA_SOUL)
-elseif(KIA_SOUL_EV)
-    add_definitions(-DKIA_SOUL_EV)
-endif()
+if (KIA_SOUL)
+  add_definitions(-DKIA_SOUL)
+  elseif (KIA_SOUL_EV)
+  add_definitions(-DKIA_SOUL_EV)
+endif ()
 
 find_package(catkin REQUIRED COMPONENTS
   message_generation
@@ -29,20 +29,20 @@ find_package(catkin REQUIRED COMPONENTS
 
 add_message_files(
    FILES
-   BrakeReportData.msg
-   BrakeReport.msg
    BrakeCommand.msg
-   SteeringReportData.msg
-   SteeringReport.msg
-   SteeringCommand.msg
-   ThrottleReportData.msg
-   ThrottleReport.msg
-   ThrottleCommand.msg
-   FaultReportData.msg
-   FaultReport.msg
+   BrakeReport.msg
+   BrakeReportData.msg
    CanFrame.msg
    CanFrameData.msg
    EnableDisable.msg
+   FaultReport.msg
+   FaultReportData.msg
+   SteeringCommand.msg
+   SteeringReport.msg
+   SteeringReportData.msg
+   ThrottleCommand.msg
+   ThrottleReport.msg
+   ThrottleReportData.msg
 )
 
 generate_messages(
@@ -55,14 +55,15 @@ generate_messages(
 ## catkin specific configuration ##
 ###################################
 catkin_package(
-  INCLUDE_DIRS include
-  #LIBRARIES oscc_api ${PROJECT_NAME}_ros_to_oscc ${PROJECT_NAME}_oscc_to_ros
+  LIBRARIES oscc_api ${PROJECT_NAME}_ros_to_oscc ${PROJECT_NAME}_oscc_to_ros
   CATKIN_DEPENDS message_runtime roscpp std_msgs
 )
 
 ###########
 ## Build ##
 ###########
+
+include_directories(${catkin_INCLUDE_DIRS})
 
 add_library(
   oscc_api
@@ -96,7 +97,6 @@ target_include_directories(
   ${PROJECT_NAME}_oscc_to_ros PUBLIC
   include
   oscc/api/include
-  ${catkin_INCLUDE_DIRS}
 )
 
 target_link_libraries(
@@ -116,13 +116,12 @@ add_dependencies(
   ${catkin_EXPORTED_TARGETS}
 )
 
-add_executable(${PROJECT_NAME}_node src/roscco_node.cpp)
+add_executable(${PROJECT_NAME}_node src/${PROJECT_NAME}_node.cpp)
 
 target_include_directories(
   ${PROJECT_NAME}_node PUBLIC
   include
   oscc/api/include
-  ${catkin_INCLUDE_DIRS}
 )
 
 add_dependencies(
@@ -159,7 +158,6 @@ if(CATKIN_ENABLE_TESTING)
     oscc_fixture PUBLIC
     test/include
     oscc/api/include/can_protocols
-    ${catkin_INCLUDE_DIRS}
   )
 
   add_rostest_gtest(
@@ -173,7 +171,6 @@ if(CATKIN_ENABLE_TESTING)
     test/include
     test/rapidcheck/include
     test/rapidcheck/extras/gtest/include
-    ${catkin_INCLUDE_DIRS}
   )
 
   target_link_libraries(
@@ -197,7 +194,6 @@ if(CATKIN_ENABLE_TESTING)
     test/rapidcheck/include
     test/rapidcheck/extras/gtest/include
     oscc/api/include/can_protocols
-    ${catkin_INCLUDE_DIRS}
   )
 
   target_link_libraries(
@@ -216,10 +212,10 @@ endif()
 
 install(
   TARGETS
-  ${PROJECT_NAME}_node
-  ${PROJECT_NAME}_ros_to_oscc
-  ${PROJECT_NAME}_oscc_to_ros
   oscc_api
+  ${PROJECT_NAME}_node
+  ${PROJECT_NAME}_oscc_to_ros
+  ${PROJECT_NAME}_ros_to_oscc
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
