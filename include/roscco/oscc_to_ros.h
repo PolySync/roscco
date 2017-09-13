@@ -48,4 +48,4 @@ public:
   static void obd_callback(can_frame* frame);
 };
 
-#endif // OSCC_TO_ROS_H
+#endif  // OSCC_TO_ROS_H

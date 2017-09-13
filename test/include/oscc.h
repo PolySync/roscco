@@ -20,20 +20,15 @@ oscc_result_t oscc_enable(void);
 
 oscc_result_t oscc_disable(void);
 
-oscc_result_t
-oscc_subscribe_to_brake_reports(void (*callback)(oscc_brake_report_s* report));
+oscc_result_t oscc_subscribe_to_brake_reports(void (*callback)(oscc_brake_report_s* report));
 
-oscc_result_t oscc_subscribe_to_throttle_reports(
-    void (*callback)(oscc_throttle_report_s* report));
+oscc_result_t oscc_subscribe_to_throttle_reports(void (*callback)(oscc_throttle_report_s* report));
 
-oscc_result_t oscc_subscribe_to_steering_reports(
-    void (*callback)(oscc_steering_report_s* report));
+oscc_result_t oscc_subscribe_to_steering_reports(void (*callback)(oscc_steering_report_s* report));
 
-oscc_result_t
-oscc_subscribe_to_fault_reports(void (*callback)(oscc_fault_report_s* report));
+oscc_result_t oscc_subscribe_to_fault_reports(void (*callback)(oscc_fault_report_s* report));
 
-oscc_result_t
-oscc_subscribe_to_obd_messages(void (*callback)(struct can_frame* frame));
+oscc_result_t oscc_subscribe_to_obd_messages(void (*callback)(struct can_frame* frame));
 
 // Expose the Callback for testing API
 void (*steering_report_callback)(oscc_steering_report_s* report);

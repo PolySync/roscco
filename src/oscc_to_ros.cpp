@@ -16,17 +16,13 @@ OsccToRos::OsccToRos(ros::NodeHandle* public_nh, ros::NodeHandle* private_nh)
     ROS_ERROR("Failed to block SIGIO");
   }
 
-  topic_brake_report_ =
-      public_nh->advertise<roscco::BrakeReport>("BrakeReport", 10);
+  topic_brake_report_ = public_nh->advertise<roscco::BrakeReport>("BrakeReport", 10);
 
-  topic_steering_report_ =
-      public_nh->advertise<roscco::SteeringReport>("SteeringReport", 10);
+  topic_steering_report_ = public_nh->advertise<roscco::SteeringReport>("SteeringReport", 10);
 
-  topic_throttle_report_ =
-      public_nh->advertise<roscco::ThrottleReport>("ThrottleReport", 10);
+  topic_throttle_report_ = public_nh->advertise<roscco::ThrottleReport>("ThrottleReport", 10);
 
-  topic_fault_report_ =
-      public_nh->advertise<roscco::FaultReport>("FaultReport", 10);
+  topic_fault_report_ = public_nh->advertise<roscco::FaultReport>("FaultReport", 10);
 
   topic_obd_messages_ = public_nh->advertise<roscco::CanFrame>("CanFrame", 10);
 
@@ -48,23 +44,19 @@ OsccToRos::OsccToRos(ros::NodeHandle* public_nh, ros::NodeHandle* private_nh)
 
 void OsccToRos::steering_callback(oscc_steering_report_s* report)
 {
-  cast_callback<oscc_steering_report_s,
-                roscco::SteeringReport,
-                roscco::SteeringReportData>(report, &topic_steering_report_);
+  cast_callback<oscc_steering_report_s, roscco::SteeringReport, roscco::SteeringReportData>(report,
+                                                                                            &topic_steering_report_);
 }
 
 void OsccToRos::brake_callback(oscc_brake_report_s* report)
 {
-  cast_callback<oscc_brake_report_s,
-                roscco::BrakeReport,
-                roscco::BrakeReportData>(report, &topic_brake_report_);
+  cast_callback<oscc_brake_report_s, roscco::BrakeReport, roscco::BrakeReportData>(report, &topic_brake_report_);
 }
 
 void OsccToRos::throttle_callback(oscc_throttle_report_s* report)
 {
-  cast_callback<oscc_throttle_report_s,
-                roscco::ThrottleReport,
-                roscco::ThrottleReportData>(report, &topic_throttle_report_);
+  cast_callback<oscc_throttle_report_s, roscco::ThrottleReport, roscco::ThrottleReportData>(report,
+                                                                                            &topic_throttle_report_);
 }
 
 template <class OSCCTYPE, class ROSMSGTYPE, class ROSDATATYPE>

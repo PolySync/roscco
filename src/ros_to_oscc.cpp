@@ -16,17 +16,17 @@ RosToOscc::RosToOscc(ros::NodeHandle* public_nh, ros::NodeHandle* private_nh)
     ROS_ERROR("Failed to block SIGIO");
   }
 
-  topic_brake_command_ = public_nh->subscribe<roscco::BrakeCommand>(
-      "BrakeCommand", 10, &RosToOscc::brakeCommandCallback, this);
+  topic_brake_command_ =
+      public_nh->subscribe<roscco::BrakeCommand>("BrakeCommand", 10, &RosToOscc::brakeCommandCallback, this);
 
-  topic_steering_command_ = public_nh->subscribe<roscco::SteeringCommand>(
-      "SteeringCommand", 10, &RosToOscc::steeringCommandCallback, this);
+  topic_steering_command_ =
+      public_nh->subscribe<roscco::SteeringCommand>("SteeringCommand", 10, &RosToOscc::steeringCommandCallback, this);
 
-  topic_throttle_command_ = public_nh->subscribe<roscco::ThrottleCommand>(
-      "ThrottleCommand", 10, &RosToOscc::throttleCommandCallback, this);
+  topic_throttle_command_ =
+      public_nh->subscribe<roscco::ThrottleCommand>("ThrottleCommand", 10, &RosToOscc::throttleCommandCallback, this);
 
-  topic_enable_disable_command_ = public_nh->subscribe<roscco::EnableDisable>(
-      "EnableDisable", 10, &RosToOscc::enableDisableCallback, this);
+  topic_enable_disable_command_ =
+      public_nh->subscribe<roscco::EnableDisable>("EnableDisable", 10, &RosToOscc::enableDisableCallback, this);
 
   if (sigprocmask(SIG_SETMASK, &orig_mask, NULL) < 0)
   {
@@ -50,8 +50,7 @@ void RosToOscc::brakeCommandCallback(const roscco::BrakeCommand::ConstPtr& msg)
   }
 };
 
-void RosToOscc::steeringCommandCallback(
-    const roscco::SteeringCommand::ConstPtr& msg)
+void RosToOscc::steeringCommandCallback(const roscco::SteeringCommand::ConstPtr& msg)
 {
   oscc_result_t ret = OSCC_ERROR;
 
@@ -67,8 +66,7 @@ void RosToOscc::steeringCommandCallback(
   }
 };
 
-void RosToOscc::throttleCommandCallback(
-    const roscco::ThrottleCommand::ConstPtr& msg)
+void RosToOscc::throttleCommandCallback(const roscco::ThrottleCommand::ConstPtr& msg)
 {
   oscc_result_t ret = OSCC_ERROR;
 
@@ -84,8 +82,7 @@ void RosToOscc::throttleCommandCallback(
   }
 };
 
-void RosToOscc::enableDisableCallback(
-    const roscco::EnableDisable::ConstPtr& msg)
+void RosToOscc::enableDisableCallback(const roscco::EnableDisable::ConstPtr& msg)
 {
   oscc_result_t ret = OSCC_ERROR;
 

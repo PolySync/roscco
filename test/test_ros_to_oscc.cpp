@@ -25,8 +25,7 @@ RC_GTEST_PROP(TestOSCCToROS, SendBrakeCommandMessage, ())
 {
   ros::NodeHandle pub_nh;
 
-  ros::Publisher pub =
-      pub_nh.advertise<roscco::BrakeCommand>("BrakeCommand", 10);
+  ros::Publisher pub = pub_nh.advertise<roscco::BrakeCommand>("BrakeCommand", 10);
 
   roscco::BrakeCommand* command(new roscco::BrakeCommand);
 
@@ -47,8 +46,7 @@ RC_GTEST_PROP(TestOSCCToROS, SendSteeringCommandMessage, ())
 {
   ros::NodeHandle pub_nh;
 
-  ros::Publisher pub =
-      pub_nh.advertise<roscco::SteeringCommand>("SteeringCommand", 10);
+  ros::Publisher pub = pub_nh.advertise<roscco::SteeringCommand>("SteeringCommand", 10);
 
   roscco::SteeringCommand* command(new roscco::SteeringCommand);
 
@@ -70,8 +68,7 @@ RC_GTEST_PROP(TestOSCCToROS, SendThrottleCommandMessage, ())
 {
   ros::NodeHandle pub_nh;
 
-  ros::Publisher pub =
-      pub_nh.advertise<roscco::ThrottleCommand>("ThrottleCommand", 10);
+  ros::Publisher pub = pub_nh.advertise<roscco::ThrottleCommand>("ThrottleCommand", 10);
 
   roscco::ThrottleCommand* command(new roscco::ThrottleCommand);
 
