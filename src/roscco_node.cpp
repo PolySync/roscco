@@ -6,8 +6,8 @@ extern "C" {
 
 #include <ros/ros.h>
 
-#include <roscco/ros_to_oscc.h>
 #include <roscco/oscc_to_ros.h>
+#include <roscco/ros_to_oscc.h>
 
 int main(int argc, char* argv[])
 {
@@ -21,9 +21,9 @@ int main(int argc, char* argv[])
 
   oscc_result_t ret = OSCC_ERROR;
 
-  ret = oscc_open( can_channel );
+  ret = oscc_open(can_channel);
 
-  if(ret != OSCC_OK )
+  if (ret != OSCC_OK)
   {
     ROS_ERROR("Could not initialize OSCC");
   }
@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
 
   ros::spin();
 
-  ret = oscc_close( 0 );
+  ret = oscc_close(0);
 
   ros::waitForShutdown();
 }
