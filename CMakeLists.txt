@@ -56,7 +56,7 @@ generate_messages(
 ###################################
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES roscco oscc_api
+  #LIBRARIES oscc_api ${PROJECT_NAME}_ros_to_oscc ${PROJECT_NAME}_oscc_to_ros
   CATKIN_DEPENDS message_runtime roscpp std_msgs
 )
 
@@ -209,3 +209,26 @@ if(CATKIN_ENABLE_TESTING)
   )
 
 endif()
+
+#############
+## Install ##
+#############
+
+install(
+  TARGETS
+  ${PROJECT_NAME}_node
+  ${PROJECT_NAME}_ros_to_oscc
+  ${PROJECT_NAME}_oscc_to_ros
+  oscc_api
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+install(
+  DIRECTORY
+  include/${PROJECT_NAME}
+  oscc/api/include
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h"
+)
