@@ -33,7 +33,19 @@ int main(int argc, char* argv[])
 
   ros::spin();
 
-  ret = oscc_close(0);
+  ret = oscc_disable();
+
+  if (ret != OSCC_OK)
+  {
+    ROS_ERROR("Could not disable OSCC");
+  }
+
+  ret = oscc_close(can_channel);
+
+  if (ret != OSCC_OK)
+  {
+    ROS_ERROR("Could not close OSCC connection");
+  }
 
   ros::waitForShutdown();
 }
