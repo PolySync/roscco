@@ -16,15 +16,15 @@ OsccToRos::OsccToRos(ros::NodeHandle* public_nh, ros::NodeHandle* private_nh)
     ROS_ERROR("Failed to block SIGIO");
   }
 
-  topic_brake_report_ = public_nh->advertise<roscco::BrakeReport>("BrakeReport", 10);
+  topic_brake_report_ = public_nh->advertise<roscco::BrakeReport>("brake_report", 10);
 
-  topic_steering_report_ = public_nh->advertise<roscco::SteeringReport>("SteeringReport", 10);
+  topic_steering_report_ = public_nh->advertise<roscco::SteeringReport>("steering_report", 10);
 
-  topic_throttle_report_ = public_nh->advertise<roscco::ThrottleReport>("ThrottleReport", 10);
+  topic_throttle_report_ = public_nh->advertise<roscco::ThrottleReport>("throttle_report", 10);
 
-  topic_fault_report_ = public_nh->advertise<roscco::FaultReport>("FaultReport", 10);
+  topic_fault_report_ = public_nh->advertise<roscco::FaultReport>("fault_report", 10);
 
-  topic_obd_messages_ = public_nh->advertise<roscco::CanFrame>("CanFrame", 10);
+  topic_obd_messages_ = public_nh->advertise<roscco::CanFrame>("can_frame", 10);
 
   if (sigprocmask(SIG_SETMASK, &orig_mask, NULL) < 0)
   {

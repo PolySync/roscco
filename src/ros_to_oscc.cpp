@@ -17,16 +17,16 @@ RosToOscc::RosToOscc(ros::NodeHandle* public_nh, ros::NodeHandle* private_nh)
   }
 
   topic_brake_command_ =
-      public_nh->subscribe<roscco::BrakeCommand>("BrakeCommand", 10, &RosToOscc::brakeCommandCallback, this);
+      public_nh->subscribe<roscco::BrakeCommand>("brake_command", 10, &RosToOscc::brakeCommandCallback, this);
 
   topic_steering_command_ =
-      public_nh->subscribe<roscco::SteeringCommand>("SteeringCommand", 10, &RosToOscc::steeringCommandCallback, this);
+      public_nh->subscribe<roscco::SteeringCommand>("steering_command", 10, &RosToOscc::steeringCommandCallback, this);
 
   topic_throttle_command_ =
-      public_nh->subscribe<roscco::ThrottleCommand>("ThrottleCommand", 10, &RosToOscc::throttleCommandCallback, this);
+      public_nh->subscribe<roscco::ThrottleCommand>("throttle_command", 10, &RosToOscc::throttleCommandCallback, this);
 
   topic_enable_disable_command_ =
-      public_nh->subscribe<roscco::EnableDisable>("EnableDisable", 10, &RosToOscc::enableDisableCallback, this);
+      public_nh->subscribe<roscco::EnableDisable>("enable_disable", 10, &RosToOscc::enableDisableCallback, this);
 
   if (sigprocmask(SIG_SETMASK, &orig_mask, NULL) < 0)
   {
