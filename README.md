@@ -18,7 +18,36 @@ cd ..
 catkin_make -DKIA_SOUL=ON
 ```
 
-## Running roscco
+## ROSCCO Example
+
+ROSCCO comes with a joystick message conversion example to work with. To make
+use of this build the project with example turned on:
+
+```
+catkin_make -DKIA_SOUL=ON -DEXAMPLE=ON
+```
+
+This example has been used with the Logitech XXX and an Xbox controller before,
+make sure that your controller maps accordingly. If it is not mapped correctly
+you'll want to make the required changes to the launch file and possibly the
+example code. More information on the joystick node can be found at:
+http://wiki.ros.org/joy
+
+To use the example you'll need to bring up a can connection for OSCC to
+communicate, source the newly compiled package and launch the three nodes,
+joy_node, roscco_commander, and roscco_node.
+
+```
+sudo ip link set can0 type can bitrate 500000
+sudo ip link set up can0
+source devel/setup.bash
+roslaunch src/roscco/example/example.launch
+```
+
+The roscco_commander converts the joy messages from the joy_node into messages
+for roscco_node. From there roscco_node sends messages to OSCC API.
+
+## Running ROSCCO
 
 The default can channel is can0 but can be specified as a node parameter and
 assumes there is a can device available through linux can. The best way to
