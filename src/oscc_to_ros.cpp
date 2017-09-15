@@ -90,6 +90,8 @@ void OsccToRos::fault_callback(oscc_fault_report_s* report)
   ros_message->header.stamp = ros::Time::now();
 
   topic_fault_report_.publish(*ros_message);
+
+  delete ros_message;
 }
 
 void OsccToRos::obd_callback(can_frame* frame)
