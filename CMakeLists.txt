@@ -11,11 +11,7 @@ else ()
   set (CMAKE_CXX_STANDARD 11)
 endif ()
 
-if (KIA_SOUL)
-  add_definitions(-DKIA_SOUL)
-  elseif (KIA_SOUL_EV)
-  add_definitions(-DKIA_SOUL_EV)
-endif ()
+include(oscc/api/OsccConfig.cmake)
 
 find_package(catkin REQUIRED COMPONENTS
   message_generation
