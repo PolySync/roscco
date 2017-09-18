@@ -35,7 +35,7 @@ private:
   double steering_;
   bool enabled_;
 
-  double steering_average;
+  double steering_average_;
 
   // Variable to ensure joystick triggers have been initialized_
   bool initialized_;
@@ -58,9 +58,9 @@ void TeleopRoscco::joystickCallback(const sensor_msgs::Joy::ConstPtr& joy)
 {
   if (initialized_)
   {
-    brake_ = (joy->axes[2] - 1) / (double)-4;
-    throttle_ = (joy->axes[5] - 1) / (double)-4;
-    steering_ = joy->axes[0] * -0.5;
+    brake_ = (joy->axes[2] - 1) / (double)-2;
+    throttle_ = (joy->axes[5] - 1) / (double)-2;
+    steering_ = joy->axes[0] * -1;
 
     roscco::EnableDisable enable_msg;
     enable_msg.header.stamp = ros::Time::now();
@@ -115,9 +115,11 @@ void TeleopRoscco::timerCallback(const ros::TimerEvent& event)
     throttle_msg.throttle_position = throttle_;
     throttle_pub_.publish(throttle_msg);
 
+    steering_average_ = calc_exponential_average(steering_average_, steering_, 0.1);
+
     roscco::SteeringCommand steering_msg;
     steering_msg.header.stamp = ros::Time::now();
-    steering_msg.steering_torque = calc_exponential_average(steering_average, steering_, 0.1);
+    steering_msg.steering_torque = steering_average_;
     steering_pub_.publish(steering_msg);
   }
 }

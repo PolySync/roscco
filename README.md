@@ -27,11 +27,11 @@ use of this build the project with example turned on:
 catkin_make -DKIA_SOUL=ON -DEXAMPLE=ON
 ```
 
-This example has been used with the Logitech XXX and an Xbox controller before,
-make sure that your controller maps accordingly. If it is not mapped correctly
-you'll want to make the required changes to the launch file and possibly the
-example code. More information on the joystick node can be found at:
-http://wiki.ros.org/joy
+This example has been used with a Logitech F310 and an Xbox 360 controller
+before, make sure that your controller maps accordingly. If it is not mapped
+correctly you'll want to make the required changes to the launch file and
+possibly the example code. More information on the joystick node can be found
+at: http://wiki.ros.org/joy
 
 To use the example you'll need to bring up a can connection for OSCC to
 communicate, source the newly compiled package and launch the three nodes,
