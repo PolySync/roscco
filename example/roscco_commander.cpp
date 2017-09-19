@@ -33,68 +33,83 @@ private:
   double brake_;
   double throttle_;
   double steering_;
-  bool enabled_;
+  bool enabled_ = false;
 
   double steering_average_;
 
   // Variable to ensure joystick triggers have been initialized_
-  bool initialized_;
+  bool initialized_ = false;
+
+  int brake_axes_ = 2;
+  int throttle_axes_ = 5;
+  int steering_axes_ = 0;
+  int start_button_ = 7;
+  int back_button_ = 6;
 };
 
 TeleopRoscco::TeleopRoscco() : brake_(0.0), throttle_(0.0), steering_(0.0), initialized_(false)
 {
-  brake_pub_ = nh_.advertise<roscco::BrakeCommand>("brake_command", 1);
-  throttle_pub_ = nh_.advertise<roscco::ThrottleCommand>("throttle_command", 1);
-  steering_pub_ = nh_.advertise<roscco::SteeringCommand>("steering_command", 1);
-  enable_disable_pub_ = nh_.advertise<roscco::EnableDisable>("enable_disable", 1);
+  int queue_size = 10;
+
+  brake_pub_ = nh_.advertise<roscco::BrakeCommand>("brake_command", queue_size);
+  throttle_pub_ = nh_.advertise<roscco::ThrottleCommand>("throttle_command", queue_size);
+  steering_pub_ = nh_.advertise<roscco::SteeringCommand>("steering_command", queue_size);
+  enable_disable_pub_ = nh_.advertise<roscco::EnableDisable>("enable_disable", queue_size);
 
   // Timed callback for publishing to OSCC < 200 ms
   timer_ = nh_.createTimer(ros::Duration(0.05), &TeleopRoscco::timerCallback, this);
 
-  joy_sub_ = nh_.subscribe<sensor_msgs::Joy>("joy", 10, &TeleopRoscco::joystickCallback, this);
+  joy_sub_ = nh_.subscribe<sensor_msgs::Joy>("joy", queue_size, &TeleopRoscco::joystickCallback, this);
 }
 
 void TeleopRoscco::joystickCallback(const sensor_msgs::Joy::ConstPtr& joy)
 {
+  // Validate the gamepad triggers are not
   if (initialized_)
   {
-    brake_ = (joy->axes[2] - 1) / (double)-2;
-    throttle_ = (joy->axes[5] - 1) / (double)-2;
-    steering_ = joy->axes[0] * -1;
+    // Map the joystick values [-1, 1] to oscc values [0, 1]
+    brake_ = (joy->axes[brake_axes_] - 1) / (double)-2;
+    throttle_ = (joy->axes[throttle_axes_] - 1) / (double)-2;
+
+    // Joystick maps inversely to oscc steering
+    steering_ = joy->axes[steering_axes_] * -1;
 
     roscco::EnableDisable enable_msg;
     enable_msg.header.stamp = ros::Time::now();
 
-    if ((previous_back_state_ == 0) && joy->buttons[6])
+    if ((previous_back_state_ == 0) && joy->buttons[back_button_])
     {
       enable_msg.enable_control = false;
       enable_disable_pub_.publish(enable_msg);
       enabled_ = false;
     }
-    else if ((previous_start_state_ == 0) && joy->buttons[7] == 1)
+    else if ((previous_start_state_ == 0) && joy->buttons[start_button_])
     {
       enable_msg.enable_control = true;
       enable_disable_pub_.publish(enable_msg);
       enabled_ = true;
     }
 
-    previous_back_state_ = joy->buttons[6];
-    previous_start_state_ = joy->buttons[7];
+    previous_back_state_ = joy->buttons[back_button_];
+    previous_start_state_ = joy->buttons[start_button_];
   }
   else
   {
+    // The threshold for considering the controller triggers to be parked in the correct position
+    double parked_threshold_ = 0.99;
+
     // Ensure the trigger values have been initialized
-    if ((joy->axes[2] > 0.99) && (joy->axes[5] > 0.99))
+    if ((joy->axes[brake_axes_] > parked_threshold_) && (joy->axes[throttle_axes_] > parked_threshold_))
     {
       initialized_ = true;
     }
 
-    if (joy->axes[2] <= 0.99)
+    if (joy->axes[brake_axes_] <= parked_threshold_)
     {
       ROS_INFO("Pull the brake trigger to initialize.");
     }
 
-    if (joy->axes[5] <= 0.99)
+    if (joy->axes[throttle_axes_] <= parked_threshold_)
     {
       ROS_INFO("Pull the throttle trigger to initilize.");
     }
@@ -115,7 +130,9 @@ void TeleopRoscco::timerCallback(const ros::TimerEvent& event)
     throttle_msg.throttle_position = throttle_;
     throttle_pub_.publish(throttle_msg);
 
-    steering_average_ = calc_exponential_average(steering_average_, steering_, 0.1);
+    // Smooth the steering to remove twitchy joystick movements
+    double data_smoothing_factor = 0.1;
+    steering_average_ = calc_exponential_average(steering_average_, steering_, data_smoothing_factor);
 
     roscco::SteeringCommand steering_msg;
     steering_msg.header.stamp = ros::Time::now();
