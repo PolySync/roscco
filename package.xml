@@ -2,7 +2,7 @@
 <package>
   <name>roscco</name>
   <version>0.0.1</version>
-  <description>A OSCC to ROS interface</description>
+  <description>An OSCC to ROS interface</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <maintainer email="support@polysync.io">PolySync</maintainer>
