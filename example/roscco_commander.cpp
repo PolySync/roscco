@@ -96,7 +96,7 @@ void TeleopRoscco::joystickCallback(const sensor_msgs::Joy::ConstPtr& joy)
   else
   {
     // The threshold for considering the controller triggers to be parked in the correct position
-    double parked_threshold_ = 0.99;
+    const double parked_threshold_ = 0.99;
 
     // Ensure the trigger values have been initialized
     if ((joy->axes[brake_axes_] > parked_threshold_) && (joy->axes[throttle_axes_] > parked_threshold_))
