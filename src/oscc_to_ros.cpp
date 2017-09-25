@@ -84,8 +84,8 @@ void OsccToRos::fault_callback(oscc_fault_report_s* report)
   ros_message->data.magic[0] = report->magic[0];
   ros_message->data.magic[1] = report->magic[1];
   ros_message->data.fault_origin_id = report->fault_origin_id;
-  ros_message->data.reserved[0] = report->reserved[0];
-  ros_message->data.reserved[1] = report->reserved[1];
+  ros_message->data.dtcs = report->dtcs;
+  ros_message->data.reserved = report->reserved;
 
   ros_message->header.stamp = ros::Time::now();
 
