@@ -47,7 +47,7 @@ at: http://wiki.ros.org/joy
 
 To use the example you'll need to bring up a CAN connection for OSCC to
 communicate, source the newly compiled package and launch the three nodes,
-joy_node, roscco_commander, and roscco_node.
+joy_node, roscco_teleop, and roscco_node.
 
 `joy_node` uses `/dev/js0` by default to change this see the
 [joystick documentation](http://wiki.ros.org/joy/Tutorials/ConfiguringALinuxJoystick).
@@ -59,7 +59,7 @@ source devel/setup.bash
 roslaunch src/roscco/example/example.launch
 ```
 
-The roscco_commander converts the joy messages from the joy_node into messages
+The roscco_teleop converts the joy messages from the joy_node into messages
 for roscco_node. The converted messages are sent on a 50ms cadence to ensure
 OSCC receives a message within the required OSCC API timing for detection of
 lost connection. The roscco_node sends it's received messages to OSCC API.
