@@ -31,7 +31,7 @@ RC_GTEST_PROP(TestOSCCToROS, CastBrakeReport, ())
 {
   ros::NodeHandle sub_nh;
   MessageHelper<roscco::BrakeReport> h;
-  ros::Subscriber sub = sub_nh.subscribe("BrakeReport", 0, &MessageHelper<roscco::BrakeReport>::cb, &h);
+  ros::Subscriber sub = sub_nh.subscribe("brake_report", 0, &MessageHelper<roscco::BrakeReport>::cb, &h);
 
   oscc_brake_report_s* data = new oscc_brake_report_s;
 
@@ -64,7 +64,7 @@ RC_GTEST_PROP(TestOSCCToROS, CastThrottleReport, ())
 {
   ros::NodeHandle sub_nh;
   MessageHelper<roscco::ThrottleReport> h;
-  ros::Subscriber sub = sub_nh.subscribe("ThrottleReport", 0, &MessageHelper<roscco::ThrottleReport>::cb, &h);
+  ros::Subscriber sub = sub_nh.subscribe("throttle_report", 0, &MessageHelper<roscco::ThrottleReport>::cb, &h);
 
   oscc_throttle_report_s* data = new oscc_throttle_report_s;
 
@@ -97,7 +97,7 @@ RC_GTEST_PROP(TestOSCCToROS, CastSteeringReport, ())
 {
   ros::NodeHandle sub_nh;
   MessageHelper<roscco::SteeringReport> h;
-  ros::Subscriber sub = sub_nh.subscribe("SteeringReport", 0, &MessageHelper<roscco::SteeringReport>::cb, &h);
+  ros::Subscriber sub = sub_nh.subscribe("steering_report", 0, &MessageHelper<roscco::SteeringReport>::cb, &h);
 
   oscc_steering_report_s* data = new oscc_steering_report_s;
 
@@ -130,7 +130,7 @@ RC_GTEST_PROP(TESTOSCCToROS, CastFaultReport, ())
 {
   ros::NodeHandle sub_nh;
   MessageHelper<roscco::FaultReport> h;
-  ros::Subscriber sub = sub_nh.subscribe("FaultReport", 0, &MessageHelper<roscco::FaultReport>::cb, &h);
+  ros::Subscriber sub = sub_nh.subscribe("fault_report", 0, &MessageHelper<roscco::FaultReport>::cb, &h);
 
   oscc_fault_report_s* data = new oscc_fault_report_s;
 
@@ -158,7 +158,7 @@ RC_GTEST_PROP(TESTOSCCToROS, CastOBDFrame, ())
 {
   ros::NodeHandle sub_nh;
   MessageHelper<roscco::CanFrame> h;
-  ros::Subscriber sub = sub_nh.subscribe("CanFrame", 0, &MessageHelper<roscco::CanFrame>::cb, &h);
+  ros::Subscriber sub = sub_nh.subscribe("can_frame", 0, &MessageHelper<roscco::CanFrame>::cb, &h);
 
   can_frame* frame = new can_frame;
 
