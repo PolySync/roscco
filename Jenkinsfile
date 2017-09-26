@@ -29,7 +29,7 @@ node('xenial') {
     }
     stage('Test') {
       parallel 'kia soul tests': {
-        sh '. /opt/ros/kinetic/setup.sh && cd catkin_ws && catkin_make run_tests -DKIA_SOUL=ON'
+        sh '. /opt/ros/kinetic/setup.sh && cd catkin_ws && catkin_make run_tests -DKIA_SOUL=ON && catkin_test_results'
         echo 'ROS Tests Complete!'
       }
     }
