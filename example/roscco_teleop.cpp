@@ -93,10 +93,8 @@ void RosccoTeleop::joystickCallback(const sensor_msgs::Joy::ConstPtr& joy)
   if (initialized_)
   {
     // Map the joystick values [-1, 1] to oscc values [0, 1]
-    // brake_ = (joy->axes[brake_axes_] - 1) / (double)-2;
-    // throttle_ = (joy->axes[throttle_axes_] - 1) / (double)-2;
     brake_ = linear_tranformation(joy->axes[brake_axes_], trigger_max_, trigger_min_, brake_max_, brake_min_);
-    throttle_ = linear_tranformation(joy->axes[throttle_axes_], trigger_max, trigger_min, throttle_max_, throttle_min_);
+    throttle_ = linear_tranformation(joy->axes[throttle_axes_], trigger_max_, trigger_min_, throttle_max_, throttle_min_);
     double steering_transform = linear_tranformation(joy->axes[steering_axes_], trigger_max_, trigger_min_, steering_max_, steering_min_);
 
     // Joystick maps inversely to oscc steering
@@ -181,18 +179,15 @@ double calc_exponential_average(double average, double setpoint, double factor)
   return (exponential_average);
 }
 
-
 //Repmap the value in an existing linear range to an new linear range example 0 in [-1, 1] to [0, 1] results in 0.5
 double linear_tranformation(double value, double high_1, double low_1, double high_2, double low_2)
 {
   return low_2 + (value - low_1) * (high_2 - low_2) / (high_1 - low_1);
 }
 
-
-
 //Calculate the inverse value by multiplying by negitive 1
 double inverse(double value)
 {
-  const inverse = -1;
+  const double inverse = -1;
   return value * inverse;
 }
