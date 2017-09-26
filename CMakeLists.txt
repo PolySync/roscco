@@ -137,23 +137,23 @@ target_link_libraries(${PROJECT_NAME}_node
 if(EXAMPLE)
 
 add_executable(
-  ${PROJECT_NAME}_commander
-  example/${PROJECT_NAME}_commander.cpp
+  ${PROJECT_NAME}_teleop
+  example/${PROJECT_NAME}_teleop.cpp
 )
 
 target_include_directories(
-  ${PROJECT_NAME}_commander PUBLIC
+  ${PROJECT_NAME}_teleop PUBLIC
   include
 )
 
 add_dependencies(
-  ${PROJECT_NAME}_commander
+  ${PROJECT_NAME}_teleop
   ${${PROJECT_NAME}_EXPORTED_TARGETS}
   ${catkin_EXPORTED_TARGETS}
 )
 
 target_link_libraries(
-  ${PROJECT_NAME}_commander
+  ${PROJECT_NAME}_teleop
   ${catkin_LIBRARIES}
 )
 
