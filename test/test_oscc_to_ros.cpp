@@ -137,8 +137,8 @@ RC_GTEST_PROP(TESTOSCCToROS, CastFaultReport, ())
   data->magic[0] = *rc::gen::arbitrary<uint8_t>();
   data->magic[1] = *rc::gen::arbitrary<uint8_t>();
   data->fault_origin_id = *rc::gen::arbitrary<uint32_t>();
-  data->reserved[0] = *rc::gen::arbitrary<uint8_t>();
-  data->reserved[1] = *rc::gen::arbitrary<uint8_t>();
+  data->dtcs = *rc::gen::arbitrary<uint8_t>();
+  data->reserved = *rc::gen::arbitrary<uint8_t>();
 
   fault_report_callback(data);
 
@@ -148,8 +148,8 @@ RC_GTEST_PROP(TESTOSCCToROS, CastFaultReport, ())
   RC_ASSERT(h.message->data.magic[0] == data->magic[0]);
   RC_ASSERT(h.message->data.magic[1] == data->magic[1]);
   RC_ASSERT(h.message->data.fault_origin_id == data->fault_origin_id);
-  RC_ASSERT(h.message->data.reserved[0] == data->reserved[0]);
-  RC_ASSERT(h.message->data.reserved[1] == data->reserved[1]);
+  RC_ASSERT(h.message->data.dtcs == data->dtcs);
+  RC_ASSERT(h.message->data.reserved == data->reserved);
 
   delete data;
 }
