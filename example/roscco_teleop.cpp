@@ -93,10 +93,12 @@ void RosccoTeleop::joystickCallback(const sensor_msgs::Joy::ConstPtr& joy)
   {
     // Map the trigger values [1, -1] to oscc values [0, 1]
     brake_ = linear_tranformation(joy->axes[brake_axes_], trigger_max_, trigger_min_, brake_max_, brake_min_);
-    throttle_ = linear_tranformation(joy->axes[throttle_axes_], trigger_max_, trigger_min_, throttle_max_, throttle_min_);
+    throttle_ =
+        linear_tranformation(joy->axes[throttle_axes_], trigger_max_, trigger_min_, throttle_max_, throttle_min_);
 
     // Map the joystick to steering [1, -1] to oscc values [-1, 1]
-    steering_ = linear_tranformation(joy->axes[steering_axes_], trigger_max_, trigger_min_, steering_max_, steering_min_);
+    steering_ =
+        linear_tranformation(joy->axes[steering_axes_], trigger_max_, trigger_min_, steering_max_, steering_min_);
 
     roscco::EnableDisable enable_msg;
     enable_msg.header.stamp = ros::Time::now();
@@ -151,7 +153,7 @@ void RosccoTeleop::timerCallback(const ros::TimerEvent& event)
     throttle_msg.throttle_position = throttle_;
     throttle_pub_.publish(throttle_msg);
 
-    //Utilize exponential average similar to OSCC's joystick commander for smoothing of joystick twitchy output
+    // Utilize exponential average similar to OSCC's joystick commander for smoothing of joystick twitchy output
     steering_average_ = calc_exponential_average(steering_average_, steering_, data_smoothing_factor);
 
     roscco::SteeringCommand steering_msg;
@@ -169,7 +171,7 @@ int main(int argc, char** argv)
   ros::spin();
 }
 
-//Calculate the exponential average
+// Calculate the exponential average
 double calc_exponential_average(double average, double setpoint, double factor)
 {
   double exponential_average = (setpoint * factor) + ((1.0 - factor) * average);
@@ -177,7 +179,7 @@ double calc_exponential_average(double average, double setpoint, double factor)
   return (exponential_average);
 }
 
-//Repmap the value in an existing linear range to an new linear range example 0 in [-1, 1] to [0, 1] results in 0.5
+// Repmap the value in an existing linear range to an new linear range example 0 in [-1, 1] to [0, 1] results in 0.5
 double linear_tranformation(double value, double high_1, double low_1, double high_2, double low_2)
 {
   return low_2 + (value - low_1) * (high_2 - low_2) / (high_1 - low_1);
