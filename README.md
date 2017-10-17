@@ -87,13 +87,13 @@ rostopic pub /BrakeCommand roscco/BrakeCommand -r 10 \
 '{header: {stamp: now}, brake_position: 50}'
 ```
 
-Similarly to the OSCC API The Reports and CanFrame messages can be
-subscribed to as feedback about what is going on in OSCC. The Command and
+Similarly to the OSCC API, the Reports and CanFrame messages can be
+subscribed to in order to receive feedback from OSCC. The Command and
 EnableDisable messages will call the commands for the OSCC API.
 
-OSCC requires that a message to each device is sent within a 200ms, ROSCCO
-leaves the responsibility to sending the messages on a cadence to the ROS
-developer.
+OSCC modules will disable if no messages are received within 200 ms. It is
+recommended to publish ROSCCO messages, at a rate of 20 Hz (every 50 ms) to
+ensure OSCC modules do not disable.
 
 ## Tests
 
