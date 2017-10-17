@@ -27,13 +27,13 @@ private:
   ros::Subscriber joy_sub_;
   ros::Timer timer_;
 
-  int previous_start_state_;
-  int previous_back_state_;
+  int previous_start_state_ = 0;
+  int previous_back_state_ = 0;
 
   // Number of messages to retain when the message queue is full
   const int queue_size = 10;
 
-  // Timed callback frequency set to meet OSCC < 200 ms messages requirement
+  // Timed callback frequency set to OSCC recommended publishing rate of 20 Hz (50 ms == 0.05 s)
   const float callback_freq = 0.05;  // Units in Seconds
 
   // OSCC input range
@@ -45,16 +45,16 @@ private:
   const double steering_min_ = -1;
 
   // Store last known value for timed callback
-  double brake_;
-  double throttle_;
-  double steering_;
+  double brake_ = 0.0;
+  double throttle_ = 0.0;
+  double steering_ = 0.0;
   bool enabled_ = false;
 
   // Smooth the steering to remove twitchy joystick movements
   const double data_smoothing_factor = 0.1;
-  double steering_average_;
+  double steering_average_ = 0.0;
 
-  // Variable to ensure joystick triggers have been initialized_
+  // Variable to ensure joystick triggers have been initialized
   bool initialized_ = false;
 
   // The threshold for considering the controller triggers to be parked in the correct position
@@ -72,7 +72,7 @@ private:
   const double joystick_max_ = -1;
 };
 
-RosccoTeleop::RosccoTeleop() : brake_(0.0), throttle_(0.0), steering_(0.0), initialized_(false)
+RosccoTeleop::RosccoTeleop()
 {
   brake_pub_ = nh_.advertise<roscco::BrakeCommand>("brake_command", queue_size);
   throttle_pub_ = nh_.advertise<roscco::ThrottleCommand>("throttle_command", queue_size);
@@ -172,7 +172,7 @@ int main(int argc, char** argv)
 }
 
 // Calculate the exponential average
-double calc_exponential_average(double average, double setpoint, double factor)
+double calc_exponential_average(const double average, const double setpoint, const double factor)
 {
   double exponential_average = (setpoint * factor) + ((1.0 - factor) * average);
 
@@ -180,7 +180,7 @@ double calc_exponential_average(double average, double setpoint, double factor)
 }
 
 // Repmap the value in an existing linear range to an new linear range example 0 in [-1, 1] to [0, 1] results in 0.5
-double linear_tranformation(double value, double high_1, double low_1, double high_2, double low_2)
+double linear_tranformation(const double value, const double high_1, const double low_1, const double high_2, const double low_2)
 {
   return low_2 + (value - low_1) * (high_2 - low_2) / (high_1 - low_1);
 }
