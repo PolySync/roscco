@@ -98,9 +98,14 @@ void OsccToRos::obd_callback(can_frame* frame)
 {
   roscco::CanFrame* ros_message(new roscco::CanFrame);
 
-  roscco::CanFrameData* data = (roscco::CanFrameData*)frame;
+  ros_message->frame.can_id = frame->can_id;
 
-  ros_message->frame = *data;
+  ros_message->frame.can_dlc = frame->can_dlc;
+
+  for(int i = 0; i < 8; i ++)
+  {
+    ros_message->frame.data[i] = frame->data[i];
+  }
 
   ros_message->header.stamp = ros::Time::now();
 
