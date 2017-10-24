@@ -102,7 +102,7 @@ void OsccToRos::obd_callback(can_frame* frame)
 
   ros_message->frame.can_dlc = frame->can_dlc;
 
-  for(int i = 0; i < 8; i ++)
+  for(int i = 0; i < ros_message->frame.CAN_FRAME_DATA_MAX_SIZE; i ++)
   {
     ros_message->frame.data[i] = frame->data[i];
   }
