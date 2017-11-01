@@ -7,7 +7,7 @@
 #include <roscco/oscc_to_ros.h>
 
 // Time to allow ROS to process callbacks and publish a message
-const double SleepTime = 0.02;
+const double SLEEP_TIME = 0.02;
 
 template <class T>
 class MessageHelper
@@ -46,7 +46,7 @@ RC_GTEST_PROP(TestOSCCToROS, CastBrakeReport, ())
 
   brake_report_callback(data);
 
-  ros::WallDuration(SleepTime).sleep();
+  ros::WallDuration(SLEEP_TIME).sleep();
   RC_ASSERT(h.count > 0);
   RC_ASSERT(h.message->data.magic[0] == data->magic[0]);
   RC_ASSERT(h.message->data.magic[1] == data->magic[1]);
@@ -79,7 +79,7 @@ RC_GTEST_PROP(TestOSCCToROS, CastThrottleReport, ())
 
   throttle_report_callback(data);
 
-  ros::WallDuration(SleepTime).sleep();
+  ros::WallDuration(SLEEP_TIME).sleep();
   RC_ASSERT(h.count > 0);
   RC_ASSERT(h.message->data.magic[0] == data->magic[0]);
   RC_ASSERT(h.message->data.magic[1] == data->magic[1]);
@@ -112,7 +112,7 @@ RC_GTEST_PROP(TestOSCCToROS, CastSteeringReport, ())
 
   steering_report_callback(data);
 
-  ros::WallDuration(SleepTime).sleep();
+  ros::WallDuration(SLEEP_TIME).sleep();
   RC_ASSERT(h.count > 0);
   RC_ASSERT(h.message->data.magic[0] == data->magic[0]);
   RC_ASSERT(h.message->data.magic[1] == data->magic[1]);
@@ -142,7 +142,7 @@ RC_GTEST_PROP(TESTOSCCToROS, CastFaultReport, ())
 
   fault_report_callback(data);
 
-  ros::WallDuration(SleepTime).sleep();
+  ros::WallDuration(SLEEP_TIME).sleep();
 
   RC_ASSERT(h.count > 0);
   RC_ASSERT(h.message->data.magic[0] == data->magic[0]);
@@ -172,7 +172,7 @@ RC_GTEST_PROP(TESTOSCCToROS, CastOBDFrame, ())
 
   obd_frame_callback(frame);
 
-  ros::WallDuration(SleepTime).sleep();
+  ros::WallDuration(SLEEP_TIME).sleep();
 
   RC_ASSERT(h.count > 0);
 
