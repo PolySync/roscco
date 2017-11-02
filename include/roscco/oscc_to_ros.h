@@ -33,7 +33,7 @@ class OsccToRos
 {
 public:
   /**
-   * @brief OSCCToRos class initializer
+   * @brief OsccToRos class initializer
    *
    * This function constructs ROS publishers and initializes the OSCC callbacks to begin transfering messages from OSCC
    * to ROS
@@ -96,7 +96,7 @@ public:
   /**
    * @brief Cast OSCC report to ROS message and publish
    *
-   * This function casts an oscc report type to a ros message and publishes the message onto ROS. Where the ROSMSGTYPE
+   * This function casts an OSCC report type to a ros message and publishes the message onto ROS. Where the ROSMSGTYPE
    * is the type that gets published containing the ROS header and wraps the now casted ROSDATATYPE. The OSCCTYPE
    * is cast to the ROSDATATYPE which should be the same memory layout as the OSCCTYPE.
    *
@@ -113,7 +113,7 @@ public:
    * @tparam ROSDATATYPE ROS data message type
    *
    * @param report       OSCC report message
-   * @param pub          ROS publisher to send the oscc message
+   * @param pub          ROS publisher to send the OSCC message
    */
   template <class OSCCTYPE, class ROSMSGTYPE, class ROSDATATYPE>
   static void cast_callback(OSCCTYPE* report, ros::Publisher* pub);
