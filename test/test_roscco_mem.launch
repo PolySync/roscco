@@ -1,0 +1,9 @@
+<launch>
+  <node name="roscco_node"
+        pkg="roscco"
+        type="roscco_node"
+        launch-prefix="valgrind">
+  </node>
+  <param name="can_device" type="string" value="vcan0">
+  </param>
+</launch>

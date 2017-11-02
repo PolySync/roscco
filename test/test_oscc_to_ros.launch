@@ -1,0 +1,7 @@
+<launch>
+  <test test-name="test_oscc_ros_api"
+        pkg="roscco"
+        type="test_oscc_ros_api"
+        time-limit="120.0">
+  </test>
+</launch>
