@@ -108,12 +108,12 @@ public:
    *                roscco::SteeringReport,
    *                roscco::SteeringReportData>(report, &topic_steering_report_);
    *
-   * @tparam OSCCTYPE    oscc report message data type
-   * @tparam ROSMSGTYPE  ros parent message type
-   * @tparam ROSDATATYPE ros data message type
+   * @tparam OSCCTYPE    OSCC report message data type
+   * @tparam ROSMSGTYPE  ROS parent message type
+   * @tparam ROSDATATYPE ROS data message type
    *
-   * @param report       oscc report message
-   * @param pub          ros publisher to send the oscc message
+   * @param report       OSCC report message
+   * @param pub          ROS publisher to send the oscc message
    */
   template <class OSCCTYPE, class ROSMSGTYPE, class ROSDATATYPE>
   static void cast_callback(OSCCTYPE* report, ros::Publisher* pub);

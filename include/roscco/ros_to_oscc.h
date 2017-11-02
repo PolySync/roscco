@@ -20,7 +20,7 @@ public:
   /**
    * @brief RosToOscc class initializer
    *
-   * This functoin constructs ROS subscribers which can publish messages to OSCC API.
+   * This function constructs ROS subscribers which can publish messages to OSCC API.
    *
    * @param public_nh  The public node handle to use for ROS subscribers.
    * @param private_nh The private node handle for ROS parameters.
@@ -39,7 +39,7 @@ public:
   /**
    * @brief Callback function to publish ROS SteeringCommand messages to OSCC.
    *
-   * This function is a callback that consumes a ROS BrakeCommand message and publishes them to the OSCC API.
+   * This function is a callback that consumes a ROS SteeringCommand message and publishes them to the OSCC API.
    *
    * @param msg ROS SteeringCommand message to be consumed.
    */
