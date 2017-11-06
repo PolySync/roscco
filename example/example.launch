@@ -1,0 +1,5 @@
+<launch>
+  <node name="joy_node" pkg="joy" type="joy_node" />
+  <node name="roscco_node" pkg="roscco" type="roscco_node" />
+  <node name="roscco_teleop" pkg="roscco" type="roscco_teleop" />
+</launch>

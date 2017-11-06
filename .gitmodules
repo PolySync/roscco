@@ -1,0 +1,9 @@
+[submodule "oscc"]
+	path = oscc
+	url = https://github.com/PolySync/oscc.git
+[submodule "test/rapidcheck"]
+	path = test/rapidcheck
+	url = https://github.com/emil-e/rapidcheck.git
+[submodule "roscpp_code_format"]
+	path = roscpp_code_format
+	url = https://github.com/davetcoleman/roscpp_code_format.git
