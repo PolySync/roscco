@@ -16,7 +16,6 @@ public:
 
 private:
   void joystickCallback(const sensor_msgs::Joy::ConstPtr& joy);
-  void timerCallback(const ros::TimerEvent& event);
 
   ros::NodeHandle nh_;
 
@@ -25,7 +24,6 @@ private:
   ros::Publisher steering_pub_;
   ros::Publisher enable_disable_pub_;
   ros::Subscriber joy_sub_;
-  ros::Timer timer_;
 
   int previous_start_state_ = 0;
   int previous_back_state_ = 0;
@@ -85,9 +83,6 @@ RosccoTeleop::RosccoTeleop()
   steering_pub_ = nh_.advertise<roscco::SteeringCommand>("steering_command", QUEUE_SIZE_);
   enable_disable_pub_ = nh_.advertise<roscco::EnableDisable>("enable_disable", QUEUE_SIZE_);
 
-  // Timed callback to ensure publishing to OSCC < 200 ms
-  timer_ = nh_.createTimer(ros::Duration(CALLBACK_FREQ_), &RosccoTeleop::timerCallback, this);
-
   joy_sub_ = nh_.subscribe<sensor_msgs::Joy>("joy", QUEUE_SIZE_, &RosccoTeleop::joystickCallback, this);
 }
 
@@ -133,6 +128,27 @@ void RosccoTeleop::joystickCallback(const sensor_msgs::Joy::ConstPtr& joy)
 
     previous_back_state_ = joy->buttons[BACK_BUTTON_];
     previous_start_state_ = joy->buttons[START_BUTTON_];
+
+    if (enabled_)
+    {
+      roscco::BrakeCommand brake_msg;
+      brake_msg.header.stamp = ros::Time::now();
+      brake_msg.brake_position = brake_;
+      brake_pub_.publish(brake_msg);
+
+      roscco::ThrottleCommand throttle_msg;
+      throttle_msg.header.stamp = ros::Time::now();
+      throttle_msg.throttle_position = throttle_;
+      throttle_pub_.publish(throttle_msg);
+
+      // Utilize exponential average similar to OSCC's joystick commander for smoothing of joystick twitchy output
+      steering_average_ = calc_exponential_average(steering_average_, steering_, DATA_SMOOTHING_FACTOR_);
+
+      roscco::SteeringCommand steering_msg;
+      steering_msg.header.stamp = ros::Time::now();
+      steering_msg.steering_torque = steering_average_;
+      steering_pub_.publish(steering_msg);
+    }
   }
   else
   {
@@ -151,38 +167,6 @@ void RosccoTeleop::joystickCallback(const sensor_msgs::Joy::ConstPtr& joy)
     {
       ROS_INFO("Pull the throttle trigger to initilize.");
     }
-  }
-}
-
-/**
- * @brief A timer based callback to publish the class variables to OSCC.
- *
- * This function is a callback for a timer which makes OSCC calls based on the private class variables in order to
- * maintain the required publishing frequency for OSCC's disconnection detection mechanism.
- *
- * @param event The timer event that triggers this callback.
- */
-void RosccoTeleop::timerCallback(const ros::TimerEvent& event)
-{
-  if (enabled_)
-  {
-    roscco::BrakeCommand brake_msg;
-    brake_msg.header.stamp = ros::Time::now();
-    brake_msg.brake_position = brake_;
-    brake_pub_.publish(brake_msg);
-
-    roscco::ThrottleCommand throttle_msg;
-    throttle_msg.header.stamp = ros::Time::now();
-    throttle_msg.throttle_position = throttle_;
-    throttle_pub_.publish(throttle_msg);
-
-    // Utilize exponential average similar to OSCC's joystick commander for smoothing of joystick twitchy output
-    steering_average_ = calc_exponential_average(steering_average_, steering_, DATA_SMOOTHING_FACTOR_);
-
-    roscco::SteeringCommand steering_msg;
-    steering_msg.header.stamp = ros::Time::now();
-    steering_msg.steering_torque = steering_average_;
-    steering_pub_.publish(steering_msg);
   }
 }
 
