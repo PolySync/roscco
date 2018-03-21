@@ -12,12 +12,17 @@ OSCC from their own ROS nodes utilizing ROS messages created from the OSCC API.
 ROSCCO is built on the Linux implementation of ROS Kinetic. The only known
 limitation for using older versions is that the tests require C++11.
 
-To install ROS Kinetic see the [install instructions](http://wiki.ros.org/kinetic/Installation) on your Linux distribution.
+To install ROS Kinetic see the
+[install instructions](http://wiki.ros.org/kinetic/Installation) on your Linux
+distribution.
 
 ### Building ROSCCO in a catkin project
 
 ROSCCO uses the OSCC API which builds for specific vehicle models. OSCC is a
-git submodule so that it can be built during the catkin build process.
+git submodule so that it can be built during the catkin build process. Make sure
+the version of ROSCCO you're using matches with the version of OSCC firmware you
+are using. See the [release page](https://github.com/PolySync/roscco/releases)
+for information about what releases ROSCCO points to.
 
 ```
 mkdir -p catkin_ws/src && cd catkin_ws/src
@@ -49,6 +54,11 @@ To use the example you'll need to bring up a CAN connection for OSCC to
 communicate, source the newly compiled package and launch the three nodes,
 joy_node, roscco_teleop, and roscco_node.
 
+To install joy node
+```
+sudo apt-get install ros-kinetic-joy
+```
+
 `joy_node` uses `/dev/js0` by default to change this see the
 [joystick documentation](http://wiki.ros.org/joy/Tutorials/ConfiguringALinuxJoystick).
 
@@ -60,9 +70,8 @@ roslaunch src/roscco/example/example.launch
 ```
 
 The roscco_teleop converts the joy messages from the joy_node into messages
-for roscco_node. The converted messages are sent on a 50ms cadence to ensure
-OSCC receives a message within the required OSCC API timing for detection of
-lost connection. The roscco_node sends it's received messages to OSCC API.
+for roscco_node and the roscco_node sends it's received messages to OSCC API.
+
 
 ## Running ROSCCO
 
@@ -78,13 +87,13 @@ rosrun roscco roscco_node _can_channel=0
 ```
 
 Passing a message through ROS should yield results on your OSCC device such as
-enabling control and holding the brake position:
+enabling control and turning the steering right with 20% torque:
 ```
-rostopic pub /EnableDisable -1 \
+rostopic pub /enable_disable roscco/EnableDisable -1 \
 '{header: {stamp: now}, enable_control: true}'
 
-rostopic pub /BrakeCommand roscco/BrakeCommand -r 10 \
-'{header: {stamp: now}, brake_position: 50}'
+rostopic pub /SteeringCommand roscco/SteeringCommand -1 \
+'{header: {stamp: now}, steering_torque: 0.2}'
 ```
 
 Similarly to the OSCC API, the Reports and CanFrame messages can be
@@ -99,7 +108,8 @@ ensure OSCC modules do not disable.
 
 ## Test Dependencies
 
-ROSCCO requires GoogleTest to be [installed](https://github.com/google/googletest/blob/master/googletest/README.md).
+ROSCCO requires GoogleTest to be
+[installed](https://github.com/google/googletest/blob/master/googletest/README.md).
 
 ROSCCO also depends on RapidCheck which is included as a submodule, ensure that
 the repository has been cloned recursively to include all submodules.
