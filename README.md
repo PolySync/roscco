@@ -92,7 +92,7 @@ enabling control and turning the steering right with 20% torque:
 rostopic pub /enable_disable roscco/EnableDisable -1 \
 '{header: {stamp: now}, enable_control: true}'
 
-rostopic pub /SteeringCommand roscco/SteeringCommand -1 \
+rostopic pub /steering_command roscco/SteeringCommand -1 \
 '{header: {stamp: now}, steering_torque: 0.2}'
 ```
 
