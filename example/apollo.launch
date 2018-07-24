@@ -1,0 +1,4 @@
+<launch>
+  <node name="roscco_node" pkg="roscco" type="roscco_node" />
+  <node name="roscco_apollo" pkg="roscco" type="roscco_apollo" />
+</launch>
