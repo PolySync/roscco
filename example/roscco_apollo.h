@@ -82,7 +82,6 @@ private:
     double throttle_report = 0;
     double brake_report = 0;
     double speed_report = 0;
-    double pre_speed_report = 0;
 };
 
 

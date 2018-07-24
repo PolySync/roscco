@@ -72,6 +72,37 @@ roslaunch src/roscco/example/example.launch
 The roscco_teleop converts the joy messages from the joy_node into messages
 for roscco_node and the roscco_node sends it's received messages to OSCC API.
 
+### Apollo open autonomous driving platform
+
+ROSCCO can serve as a bridge to Baidu's open autonomous driving platform Apollo.
+
+This example only support the Kia Soul EV. We are planning on extending support to the KIA Niro.
+You will need a double channel Kvaser or two single channel Kvaser, can0 will be drivekit CAN and can1 will be diagnostics CAN.
+
+#### Installation and build
+
+The installation instructions are very similar to the one above, the main difference is that everything needs to be done within Apollo's docker environment.
+
+```
+mkdir -p catkin_ws/src && cd catkin_ws/src
+git clone --recursive https://github.com/PolySync/roscco.git
+cd ..
+catkin_make -DCATKIN_ENABLE_TESTING=0 -DKIA_SOUL_EV=ON -DAPOLLO=ON
+source devel/setup.bash
+```
+
+#### Running ROSCCO with Apollo
+
+With Apollo control module running, 
+
+```
+sudo ip link set can0 type can bitrate 500000
+sudo ip link set up can0
+sudo ip link set can1 type can bitrate 500000
+sudo ip link set up can1
+roslaunch roscco apollo.launch
+```
+
 
 ## Running ROSCCO
 
