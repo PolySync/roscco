@@ -81,6 +81,21 @@ You will need a double channel Kvaser or two single channel Kvaser, can0 will be
 
 #### Installation and build
 
+Install and build Apollo
+
+This project was develloped on Apollo v2.0.0. It would most probably build on other version of Apollo with some modifications.
+
+```
+git clone https://github.com/ApolloAuto/apollo.git --branch v2.0.0
+cd apollo/
+./docker/scripts/dev_start.sh
+./docker/scripts/dev_into.sh
+./apollo.sh build
+```
+
+
+Install and build ROSCCO
+
 The installation instructions are very similar to the one above, the main difference is that everything needs to be done within Apollo's docker environment.
 
 ```
