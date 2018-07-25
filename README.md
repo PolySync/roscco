@@ -103,6 +103,16 @@ sudo ip link set up can1
 roslaunch roscco apollo.launch
 ```
 
+You can enable OSCC using `rostopic pub`,
+
+```
+rostopic pub /enable_disable roscco/EnableDisable "header:
+  seq: 0
+  stamp: now
+  frame_id: ''
+enable_control: true"
+```
+
 
 ## Running ROSCCO
 
