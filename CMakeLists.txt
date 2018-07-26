@@ -100,6 +100,11 @@ target_link_libraries(
   oscc_api
 )
 
+target_link_libraries(
+  ${PROJECT_NAME}_ros_to_oscc
+  oscc_api
+)
+
 add_dependencies(
   ${PROJECT_NAME}_ros_to_oscc
   ${${PROJECT_NAME}_EXPORTED_TARGETS}
@@ -157,6 +162,80 @@ target_link_libraries(
   ${catkin_LIBRARIES}
 )
 
+endif()
+
+if(APOLLO)
+if(KIA_SOUL_EV)
+
+find_package(catkin 
+             REQUIRED COMPONENTS 
+             roscpp 
+             rospy 
+             std_msgs 
+             genmsg)
+
+include_directories(include
+    ${catkin_INCLUDE_DIRS}
+    /apollo/bazel-apollo/bazel-out/local-dbg/genfiles/
+)
+
+add_library(
+  ${PROJECT_NAME}_pid_control
+  src/pid_control.cpp
+)
+
+
+link_directories(
+    /apollo/bazel-apollo/bazel-out/local-dbg/bin/modules/canbus/
+    /apollo/bazel-apollo/bazel-out/local-dbg/bin/modules/control/
+    /apollo/bazel-apollo/bazel-out/local-dbg/bin/modules/localization/
+    /apollo/bazel-apollo/bazel-out/local-dbg/bin/modules/common/proto
+    /apollo/bazel-apollo/bazel-out/local-dbg/bin/modules/drivers/canbus/common/
+    /apollo/bazel-apollo/bazel-out/local-dbg/bin/modules/drivers/canbus/proto/
+    /apollo/bazel-apollo/bazel-out/local-dbg/bin/modules/drivers/canbus/ )    
+
+add_executable(
+  ${PROJECT_NAME}_apollo
+  example/${PROJECT_NAME}_apollo.cpp
+)
+
+target_include_directories(
+  ${PROJECT_NAME}_apollo PUBLIC
+  include
+)
+
+add_dependencies(
+  ${PROJECT_NAME}_apollo
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+  ${catkin_EXPORTED_TARGETS}
+  ${PROJECT_NAME}_apollo_generate_messages_cpp
+)
+
+target_link_libraries(
+  ${PROJECT_NAME}_apollo
+  ${catkin_LIBRARIES}
+  ${PROJECT_NAME}_pid_control
+  /apollo/bazel-apollo/bazel-out/local-dbg/bin/modules/canbus/proto/libcanbus_proto_lib.a
+  /apollo/bazel-apollo/bazel-out/local-dbg/bin/modules/control/proto/libcontrol_proto_lib.a
+  /apollo/bazel-apollo/bazel-out/local-dbg/bin/modules/localization/proto/liblocalization_proto_lib.a
+  /apollo/bazel-apollo/bazel-out/local-dbg/bin/modules/localization/proto/libpose_proto_lib.a
+  canbus_proto_lib
+  protobuf
+  canbus_lib
+  control_lib
+  localization_lib
+  canbus_common
+  vehicle_signal_proto_lib
+  pnc_point_proto_lib
+  gnss_status_proto_lib
+  car_sound_proto_lib
+  header_proto_lib
+  common_proto_lib
+  error_code_proto_lib
+  vehicle_state_proto_lib 
+)
+
+endif()
 endif()
 
 #############
