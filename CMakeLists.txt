@@ -202,6 +202,7 @@ add_executable(
 target_include_directories(
   ${PROJECT_NAME}_apollo PUBLIC
   include
+  oscc/api/include
 )
 
 add_dependencies(

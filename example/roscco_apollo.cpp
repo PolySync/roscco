@@ -54,7 +54,7 @@ void RosccoApollo::EVCanFrameCallback( const roscco::CanFrame& input )
 {
     switch( input.frame.can_id )
     {
-        case 512: 
+        case KIA_SOUL_OBD_THROTTLE_PRESSURE_CAN_ID: 
         {
             throttle_report = input.frame.data[4];
 
@@ -62,15 +62,15 @@ void RosccoApollo::EVCanFrameCallback( const roscco::CanFrame& input )
 
             break;
         }
-        case 544: 
+        case KIA_SOUL_OBD_BRAKE_PRESSURE_CAN_ID: 
         {
             brake_report = input.frame.data[4] + input.frame.data[5] * 256;
 
-            brake_report = brake_report * EV_BRAKE_RATIO;
+            brake_report = brake_report * BRAKE_RATIO;
 
             break;
         }
-        case 688: 
+        case KIA_SOUL_OBD_STEERING_WHEEL_ANGLE_CAN_ID: 
         {
             steering_angle_report = input.frame.data[0] + input.frame.data[1] * 256;
 
@@ -83,7 +83,7 @@ void RosccoApollo::EVCanFrameCallback( const roscco::CanFrame& input )
 
             break;
         }
-        case 1200:
+        case KIA_SOUL_OBD_WHEEL_SPEED_CAN_ID:
         {
             speed_report = input.frame.data[0] + input.frame.data[2]
                             + input.frame.data[4] + input.frame.data[6];
@@ -93,7 +93,7 @@ void RosccoApollo::EVCanFrameCallback( const roscco::CanFrame& input )
 
             speed_report = speed_report / 4;
 
-            speed_report = speed_report * EV_SPEED_RATIO;
+            speed_report = speed_report * SPEED_RATIO;
 
             break;
         }
