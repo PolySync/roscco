@@ -77,7 +77,7 @@ for roscco_node and the roscco_node sends it's received messages to OSCC API.
 ROSCCO can serve as a bridge to Baidu's open autonomous driving platform Apollo.
 
 This example only support the Kia Soul EV. We are planning on extending support to the Kia Niro.
-You will need a double channel Kvaser or two single channel Kvaser, can0 will be drivekit CAN and can1 will be diagnostics CAN.
+You will need a double channel Kvaser or two single channel Kvaser, to connect to drivekit CAN and diagnostics CAN.
 
 #### Installation and build
 

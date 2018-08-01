@@ -134,9 +134,9 @@ void closedLoopControl( double setpoint,
     params.max = 1;
     params.min = -1;
     params.p_term = 0.016;
-    params.i_term = 0.0001;
-    params.d_term = 0.01;
-    params.i_max = 5000;
+    params.i_term = 0.004;
+    params.d_term = 0.001;
+    params.i_max = 250;
 
     output.steering_torque = pidController( &params, &state, steering_angle_report );
 }

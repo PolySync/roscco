@@ -14,8 +14,7 @@
 #define THROTTLE_RATIO 0.393
 #define BRAKE_RATIO 0.115
 #define STEERING_RATIO 0.018
-#define SPEED_RATIO 0.003
-
+#define SPEED_RATIO 0.02
 
 class RosccoApollo
 {
