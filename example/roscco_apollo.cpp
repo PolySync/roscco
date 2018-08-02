@@ -13,7 +13,7 @@ RosccoApollo::RosccoApollo()
     throttle_sub = nh.subscribe( "/apollo/control", 1, &RosccoApollo::throttleCallback, this );
     localization_sub = nh.subscribe( "/apollo/localization/pose", 1, &RosccoApollo::localizationCallback, this );
 
-    can_frame_sub = nh.subscribe( "/can_frame", 1, &RosccoApollo::EVCanFrameCallback, this );
+    can_frame_sub = nh.subscribe( "/can_frame", 1, &RosccoApollo::canFrameCallback, this );
 }
 
 
@@ -50,13 +50,17 @@ void RosccoApollo::throttleCallback( const apollo::control::ControlCommand& inpu
 }
 
 
-void RosccoApollo::EVCanFrameCallback( const roscco::CanFrame& input ) 
+void RosccoApollo::canFrameCallback( const roscco::CanFrame& input ) 
 {
     switch( input.frame.can_id )
     {
         case KIA_SOUL_OBD_THROTTLE_PRESSURE_CAN_ID: 
         {
-            throttle_report = input.frame.data[4];
+            #if defined( KIA_SOUL_EV )
+                throttle_report = input.frame.data[4];
+            #elif defined( KIA_NIRO )
+                throttle_report = input.frame.data[7];
+            #endif
 
             throttle_report = throttle_report * THROTTLE_RATIO;
 
@@ -64,7 +68,11 @@ void RosccoApollo::EVCanFrameCallback( const roscco::CanFrame& input )
         }
         case KIA_SOUL_OBD_BRAKE_PRESSURE_CAN_ID: 
         {
-            brake_report = input.frame.data[4] + input.frame.data[5] * 256;
+            #if defined( KIA_SOUL_EV )
+                brake_report = input.frame.data[4] + input.frame.data[5] * 256;
+            #elif defined( KIA_NIRO )
+                brake_report = input.frame.data[3] + input.frame.data[4] * 256;
+            #endif
 
             brake_report = brake_report * BRAKE_RATIO;
 
@@ -88,8 +96,8 @@ void RosccoApollo::EVCanFrameCallback( const roscco::CanFrame& input )
             speed_report = input.frame.data[0] + input.frame.data[2]
                             + input.frame.data[4] + input.frame.data[6];
 
-            speed_report += ( input.frame.data[1] + input.frame.data[3]
-                            + input.frame.data[5] + input.frame.data[7] ) * 256;
+                speed_report += ( input.frame.data[1] + input.frame.data[3]
+                                + input.frame.data[5] + input.frame.data[7] ) * 256;
 
             speed_report = speed_report / 4;
 

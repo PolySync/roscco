@@ -164,7 +164,7 @@ target_link_libraries(
 
 endif()
 
-if(APOLLO AND KIA_SOUL_EV)
+if(APOLLO AND (KIA_SOUL_EV OR KIA_NIRO))
 
 find_package(catkin 
              REQUIRED COMPONENTS 

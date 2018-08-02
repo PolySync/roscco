@@ -12,9 +12,14 @@
 #include <vehicles.h>
 
 #define THROTTLE_RATIO 0.393
-#define BRAKE_RATIO 0.115
 #define STEERING_RATIO 0.018
 #define SPEED_RATIO 0.02
+
+#if defined( KIA_SOUL_EV )
+    #define BRAKE_RATIO 0.115
+#elif defined( KIA_NIRO )
+    #define BRAKE_RATIO 0.033
+#endif
 
 class RosccoApollo
 {
@@ -55,7 +60,7 @@ private:
      *
      * @param roscco can frame message to be consumed
      */
-    void EVCanFrameCallback( const roscco::CanFrame& input );
+    void canFrameCallback( const roscco::CanFrame& input );
     
     /**
      * @brief Callback function to log localization
