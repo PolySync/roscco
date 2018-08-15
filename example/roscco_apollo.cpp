@@ -60,6 +60,10 @@ void RosccoApollo::canFrameCallback( const roscco::CanFrame& input )
                 throttle_report = input.frame.data[4];
             #elif defined( KIA_NIRO )
                 throttle_report = input.frame.data[7];
+
+                speed_report = input.frame.data[4];
+
+                speed_report = speed_report * SPEED_RATIO;
             #endif
 
             throttle_report = throttle_report * THROTTLE_RATIO;
@@ -93,15 +97,17 @@ void RosccoApollo::canFrameCallback( const roscco::CanFrame& input )
         }
         case KIA_SOUL_OBD_WHEEL_SPEED_CAN_ID:
         {
-            speed_report = input.frame.data[0] + input.frame.data[2]
-                            + input.frame.data[4] + input.frame.data[6];
+            #if defined( KIA_SOUL_EV )
+                speed_report = input.frame.data[0] + input.frame.data[2]
+                                + input.frame.data[4] + input.frame.data[6];
 
                 speed_report += ( input.frame.data[1] + input.frame.data[3]
                                 + input.frame.data[5] + input.frame.data[7] ) * 256;
 
-            speed_report = speed_report / 4;
+                speed_report = speed_report / 4;
 
-            speed_report = speed_report * SPEED_RATIO;
+                speed_report = speed_report * SPEED_RATIO;
+            #endif
 
             break;
         }

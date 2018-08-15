@@ -13,12 +13,13 @@
 
 #define THROTTLE_RATIO 0.393
 #define STEERING_RATIO 0.018
-#define SPEED_RATIO 0.02
 
 #if defined( KIA_SOUL_EV )
-    #define BRAKE_RATIO 0.115
+    #define BRAKE_RATIO 0.12
+    #define SPEED_RATIO 0.02
 #elif defined( KIA_NIRO )
     #define BRAKE_RATIO 0.033
+    #define SPEED_RATIO 0.66
 #endif
 
 class RosccoApollo
