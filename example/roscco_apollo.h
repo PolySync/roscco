@@ -16,10 +16,10 @@
 
 #if defined( KIA_SOUL_EV )
     #define BRAKE_RATIO 0.12
-    #define SPEED_RATIO 0.02
+    #define SPEED_RATIO 0.002
 #elif defined( KIA_NIRO )
     #define BRAKE_RATIO 0.033
-    #define SPEED_RATIO 0.66
+    #define SPEED_RATIO 0.3
 #endif
 
 class RosccoApollo
