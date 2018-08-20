@@ -164,8 +164,7 @@ target_link_libraries(
 
 endif()
 
-if(APOLLO)
-if(KIA_SOUL_EV)
+if(APOLLO AND KIA_SOUL_EV)
 
 find_package(catkin 
              REQUIRED COMPONENTS 
@@ -202,6 +201,7 @@ add_executable(
 target_include_directories(
   ${PROJECT_NAME}_apollo PUBLIC
   include
+  oscc/api/include
 )
 
 add_dependencies(
@@ -235,7 +235,6 @@ target_link_libraries(
   vehicle_state_proto_lib 
 )
 
-endif()
 endif()
 
 #############
