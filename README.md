@@ -72,6 +72,62 @@ roslaunch src/roscco/example/example.launch
 The roscco_teleop converts the joy messages from the joy_node into messages
 for roscco_node and the roscco_node sends it's received messages to OSCC API.
 
+### Apollo open autonomous driving platform
+
+ROSCCO can serve as a bridge to Baidu's open autonomous driving platform Apollo.
+
+This example only support the Kia Soul EV. We are planning on extending support to the Kia Niro.
+You will need a double channel Kvaser or two single channel Kvaser, can0 will be drivekit CAN and can1 will be diagnostics CAN.
+
+#### Installation and build
+
+Install and build Apollo
+
+This project was developed on Apollo v2.0.0. It would most probably build on other version of Apollo with some modifications.
+
+```
+git clone https://github.com/ApolloAuto/apollo.git --branch v2.0.0
+cd apollo/
+./docker/scripts/dev_start.sh
+./docker/scripts/dev_into.sh
+./apollo.sh build
+```
+
+
+Install and build ROSCCO
+
+The installation instructions are very similar to the one above, the main difference is that everything needs to be done within Apollo's docker environment.
+
+```
+mkdir -p catkin_ws/src && cd catkin_ws/src
+git clone --recursive https://github.com/PolySync/roscco.git
+cd ..
+catkin_make -DCATKIN_ENABLE_TESTING=0 -DKIA_SOUL_EV=ON -DAPOLLO=ON
+source devel/setup.bash
+```
+
+#### Running ROSCCO with Apollo
+
+With Apollo control module running, 
+
+```
+sudo ip link set can0 type can bitrate 500000
+sudo ip link set up can0
+sudo ip link set can1 type can bitrate 500000
+sudo ip link set up can1
+roslaunch roscco apollo.launch
+```
+
+You can enable OSCC using `rostopic pub`,
+
+```
+rostopic pub /enable_disable roscco/EnableDisable "header:
+  seq: 0
+  stamp: now
+  frame_id: ''
+enable_control: true"
+```
+
 
 ## Running ROSCCO
 
@@ -92,7 +148,7 @@ enabling control and turning the steering right with 20% torque:
 rostopic pub /enable_disable roscco/EnableDisable -1 \
 '{header: {stamp: now}, enable_control: true}'
 
-rostopic pub /SteeringCommand roscco/SteeringCommand -1 \
+rostopic pub /steering_command roscco/SteeringCommand -1 \
 '{header: {stamp: now}, steering_torque: 0.2}'
 ```
 

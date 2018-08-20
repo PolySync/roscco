@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
 
   oscc_result_t ret = OSCC_ERROR;
 
-  ret = oscc_open(can_channel);
+  ret = oscc_init();
 
   if (ret != OSCC_OK)
   {
