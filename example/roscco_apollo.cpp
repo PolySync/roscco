@@ -11,7 +11,6 @@ RosccoApollo::RosccoApollo()
     steering_sub = nh.subscribe( "/apollo/control", 1, &RosccoApollo::steeringCallback, this );  
     brake_sub = nh.subscribe( "/apollo/control", 1, &RosccoApollo::brakeCallback, this );
     throttle_sub = nh.subscribe( "/apollo/control", 1, &RosccoApollo::throttleCallback, this );
-    localization_sub = nh.subscribe( "/apollo/localization/pose", 1, &RosccoApollo::localizationCallback, this );
 
     can_frame_sub = nh.subscribe( "/can_frame", 1, &RosccoApollo::canFrameCallback, this );
 }
@@ -94,8 +93,7 @@ void RosccoApollo::canFrameCallback( const roscco::CanFrame& input )
         case KIA_SOUL_OBD_SPEED_CAN_ID:
         {
             #if defined( KIA_SOUL_EV )
-                speed_report = input.frame.data[3] 
-                                + input.frame.data[2] * 128;
+                speed_report = input.frame.data[3] + input.frame.data[2] * 128;
 
                 speed_report = speed_report * SPEED_RATIO;
 
@@ -123,13 +121,6 @@ void RosccoApollo::canFrameCallback( const roscco::CanFrame& input )
     output.set_speed_mps( speed_report );
 
     chassis_pub.publish( output );
-}
-
-
-void RosccoApollo::localizationCallback( const apollo::localization::LocalizationEstimate& input ) 
-{
-    std::cout << std::to_string( input.pose().position().x() ) << ", "
-              << std::to_string( input.pose().position().y() ) << "\n";
 }
 
 
