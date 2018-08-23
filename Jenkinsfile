@@ -50,7 +50,7 @@ node() {
                             cd catkin_ws && \
                             catkin_make -DVEHICLE=${platform} && \
                             ROS_HOME=${workspace} ROS_LOG_DIR=${workspace} catkin_make run_tests -DVEHICLE=${platform} && \
-                            catkin_test_results"
+                            catkin_test_results --verbose"
                     }
                 }
             }
