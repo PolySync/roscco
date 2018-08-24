@@ -7,7 +7,7 @@
 #include <roscco/oscc_to_ros.h>
 
 // Time to allow ROS to process callbacks and publish a message
-const double SLEEP_TIME = 0.02;
+const double SLEEP_TIME = 0.05;
 
 template <class T>
 class MessageHelper
