@@ -5,18 +5,21 @@
 #include <roscco/CanFrame.h>
 #include <modules/canbus/proto/chassis.pb.h>
 #include <modules/control/proto/control_cmd.pb.h>
-#include <modules/localization/proto/localization.pb.h>
 #include <roscco/pid_control.h>
 #include <string>
 #include <math.h>
+#include <vehicles.h>
 
 #define THROTTLE_RATIO 0.393
-#define EV_BRAKE_RATIO 0.118
-#define PETROL_BRAKE_RATIO 0.056
 #define STEERING_RATIO 0.018
-#define EV_SPEED_RATIO 0.003
-#define PETROL_SPEED_RATIO 0.02
 
+#if defined( KIA_SOUL_EV )
+    #define BRAKE_RATIO 0.12
+    #define SPEED_RATIO 0.002
+#elif defined( KIA_NIRO )
+    #define BRAKE_RATIO 0.033
+    #define SPEED_RATIO 0.3
+#endif
 
 class RosccoApollo
 {
@@ -57,14 +60,7 @@ private:
      *
      * @param roscco can frame message to be consumed
      */
-    void EVCanFrameCallback( const roscco::CanFrame& input );
-    
-    /**
-     * @brief Callback function to log localization
-     *
-     * @param apollo localization message to be consumed
-     */
-    void localizationCallback( const apollo::localization::LocalizationEstimate& input );
+    void canFrameCallback( const roscco::CanFrame& input );
 
     ros::NodeHandle nh;
 

@@ -1,43 +1,66 @@
 #!groovy
-node('xenial') {
-  try {
-    stage('Checkout') {
-      sh 'mkdir -p catkin_ws/src/roscco'
-      dir('catkin_ws/src/roscco')
-      {
-        checkout([
-          $class: 'GitSCM',
-          branches: scm.branches,
-          doGenerateSubmoduleConfigurations: false,
-          extensions: scm.extensions + [[$class: 'CleanBeforeCheckout'],
-            [$class: 'SubmoduleOption',
-            disableSubmodules: false,
-            parentCredentials: true,
-            recursiveSubmodules: true,
-            reference: '',
-            trackingSubmodules: false]],
-          submoduleCfg: [],
-          userRemoteConfigs: scm.userRemoteConfigs
-        ])
-      }
+
+node() {
+    def builds = [:]
+    def platforms = [:]
+
+    sh 'mkdir -p catkin_ws/src/roscco'
+    dir('catkin_ws/src/roscco') {
+        checkout scm
+        sh "git submodule update --init --recursive"
+
+        def image = docker.build("catkin_make-build:${env.BUILD_ID}")
+
+
+        def output = image.inside {
+            sh returnStdout: true, script: "cmake -LA ./oscc/firmware | grep 'VEHICLE_VALUES' | cut -d'=' -f 2"
+        }
+
+        platforms = output.trim().tokenize(';')\
     }
-    stage('Build') {
-      parallel 'kia soul firmware': {
-        sh '. /opt/ros/kinetic/setup.sh && cd catkin_ws && catkin_make -DKIA_SOUL=ON'
-      }
-      echo 'Build Complete!'
+
+    for(int j=0; j<platforms.size(); j++) {
+        def platform_idx = j
+        def platform = platforms[platform_idx]
+        builds[platform] = {
+            node {
+                sh 'mkdir -p catkin_ws/src/roscco'
+                dir('catkin_ws/src/roscco') {
+                    checkout scm
+                    sh "git submodule update --init --recursive"
+                }
+
+                image = docker.build("catkin_make-build:${env.BUILD_ID}", "./catkin_ws/src/roscco")
+
+                stage("Build ${platform}"){
+                    image.inside {
+                        sh ". /opt/ros/kinetic/setup.sh && \
+                            cd catkin_ws && \
+                            catkin_make -DVEHICLE=${platform}"
+
+                        echo "${platform}: Build Complete!"
+                    }
+                }
+
+                def workspace = pwd()
+
+                stage("Test ${platform}"){
+                    image.inside{
+                        sh ". /opt/ros/kinetic/setup.sh && \
+                            cd catkin_ws && \
+                            ROS_HOME=${workspace} ROS_LOG_DIR=${workspace} catkin_make run_tests -DVEHICLE=${platform} && \
+                            catkin_test_results --verbose"
+                    }
+                }
+            }
+        }
     }
-    stage('Test') {
-      parallel 'kia soul tests': {
-        sh '. /opt/ros/kinetic/setup.sh && cd catkin_ws && catkin_make run_tests -DKIA_SOUL=ON && catkin_test_results'
-        echo 'ROS Tests Complete!'
-      }
+
+    try {
+        parallel builds
     }
-    stage('Release') {
-      echo 'Release Package Created!'
+    finally {
+        deleteDir()
     }
-  }
-  finally {
-    deleteDir()
-  }
+
 }

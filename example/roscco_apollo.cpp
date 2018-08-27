@@ -11,9 +11,8 @@ RosccoApollo::RosccoApollo()
     steering_sub = nh.subscribe( "/apollo/control", 1, &RosccoApollo::steeringCallback, this );  
     brake_sub = nh.subscribe( "/apollo/control", 1, &RosccoApollo::brakeCallback, this );
     throttle_sub = nh.subscribe( "/apollo/control", 1, &RosccoApollo::throttleCallback, this );
-    localization_sub = nh.subscribe( "/apollo/localization/pose", 1, &RosccoApollo::localizationCallback, this );
 
-    can_frame_sub = nh.subscribe( "/can_frame", 1, &RosccoApollo::EVCanFrameCallback, this );
+    can_frame_sub = nh.subscribe( "/can_frame", 1, &RosccoApollo::canFrameCallback, this );
 }
 
 
@@ -50,27 +49,35 @@ void RosccoApollo::throttleCallback( const apollo::control::ControlCommand& inpu
 }
 
 
-void RosccoApollo::EVCanFrameCallback( const roscco::CanFrame& input ) 
+void RosccoApollo::canFrameCallback( const roscco::CanFrame& input ) 
 {
     switch( input.frame.can_id )
     {
-        case 512: 
+        case KIA_SOUL_OBD_THROTTLE_PRESSURE_CAN_ID: 
         {
-            throttle_report = input.frame.data[4];
+            #if defined( KIA_SOUL_EV )
+                throttle_report = input.frame.data[4];
+            #elif defined( KIA_NIRO )
+                throttle_report = input.frame.data[7];
+            #endif
 
             throttle_report = throttle_report * THROTTLE_RATIO;
 
             break;
         }
-        case 544: 
+        case KIA_SOUL_OBD_BRAKE_PRESSURE_CAN_ID: 
         {
-            brake_report = input.frame.data[4] + input.frame.data[5] * 256;
+            #if defined( KIA_SOUL_EV )
+                brake_report = input.frame.data[4] + input.frame.data[5] * 256;
+            #elif defined( KIA_NIRO )
+                brake_report = input.frame.data[3] + input.frame.data[4] * 256;
+            #endif
 
-            brake_report = brake_report * EV_BRAKE_RATIO;
+            brake_report = brake_report * BRAKE_RATIO;
 
             break;
         }
-        case 688: 
+        case KIA_SOUL_OBD_STEERING_WHEEL_ANGLE_CAN_ID: 
         {
             steering_angle_report = input.frame.data[0] + input.frame.data[1] * 256;
 
@@ -83,17 +90,19 @@ void RosccoApollo::EVCanFrameCallback( const roscco::CanFrame& input )
 
             break;
         }
-        case 1200:
+        case KIA_SOUL_OBD_SPEED_CAN_ID:
         {
-            speed_report = input.frame.data[0] + input.frame.data[2]
-                            + input.frame.data[4] + input.frame.data[6];
+            #if defined( KIA_SOUL_EV )
+                speed_report = input.frame.data[3] + input.frame.data[2] * 128;
 
-            speed_report += ( input.frame.data[1] + input.frame.data[3]
-                            + input.frame.data[5] + input.frame.data[7] ) * 256;
+                speed_report = speed_report * SPEED_RATIO;
 
-            speed_report = speed_report / 4;
+            #elif defined( KIA_NIRO )
+                speed_report = input.frame.data[0];
 
-            speed_report = speed_report * EV_SPEED_RATIO;
+                speed_report = speed_report * SPEED_RATIO;
+            
+            #endif
 
             break;
         }
@@ -115,13 +124,6 @@ void RosccoApollo::EVCanFrameCallback( const roscco::CanFrame& input )
 }
 
 
-void RosccoApollo::localizationCallback( const apollo::localization::LocalizationEstimate& input ) 
-{
-    std::cout << std::to_string( input.pose().position().x() ) << ", "
-              << std::to_string( input.pose().position().y() ) << "\n";
-}
-
-
 void closedLoopControl( double setpoint, 
                         roscco::SteeringCommand& output,
                         double steering_angle_report )
@@ -134,9 +136,9 @@ void closedLoopControl( double setpoint,
     params.max = 1;
     params.min = -1;
     params.p_term = 0.016;
-    params.i_term = 0.0001;
-    params.d_term = 0.01;
-    params.i_max = 5000;
+    params.i_term = 0.004;
+    params.d_term = 0.001;
+    params.i_max = 250;
 
     output.steering_torque = pidController( &params, &state, steering_angle_report );
 }

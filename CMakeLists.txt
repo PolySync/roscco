@@ -164,8 +164,7 @@ target_link_libraries(
 
 endif()
 
-if(APOLLO)
-if(KIA_SOUL_EV)
+if(APOLLO AND (KIA_SOUL_EV OR KIA_NIRO))
 
 find_package(catkin 
              REQUIRED COMPONENTS 
@@ -188,7 +187,6 @@ add_library(
 link_directories(
     /apollo/bazel-apollo/bazel-out/local-dbg/bin/modules/canbus/
     /apollo/bazel-apollo/bazel-out/local-dbg/bin/modules/control/
-    /apollo/bazel-apollo/bazel-out/local-dbg/bin/modules/localization/
     /apollo/bazel-apollo/bazel-out/local-dbg/bin/modules/common/proto
     /apollo/bazel-apollo/bazel-out/local-dbg/bin/modules/drivers/canbus/common/
     /apollo/bazel-apollo/bazel-out/local-dbg/bin/modules/drivers/canbus/proto/
@@ -202,6 +200,7 @@ add_executable(
 target_include_directories(
   ${PROJECT_NAME}_apollo PUBLIC
   include
+  oscc/api/include
 )
 
 add_dependencies(
@@ -217,13 +216,10 @@ target_link_libraries(
   ${PROJECT_NAME}_pid_control
   /apollo/bazel-apollo/bazel-out/local-dbg/bin/modules/canbus/proto/libcanbus_proto_lib.a
   /apollo/bazel-apollo/bazel-out/local-dbg/bin/modules/control/proto/libcontrol_proto_lib.a
-  /apollo/bazel-apollo/bazel-out/local-dbg/bin/modules/localization/proto/liblocalization_proto_lib.a
-  /apollo/bazel-apollo/bazel-out/local-dbg/bin/modules/localization/proto/libpose_proto_lib.a
   canbus_proto_lib
   protobuf
   canbus_lib
   control_lib
-  localization_lib
   canbus_common
   vehicle_signal_proto_lib
   pnc_point_proto_lib
@@ -235,7 +231,6 @@ target_link_libraries(
   vehicle_state_proto_lib 
 )
 
-endif()
 endif()
 
 #############
